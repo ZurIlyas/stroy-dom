@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root { --bg: #f2f2f2; --ink: #1b1b1b; --mute: #7a7a7a; --line: #c9c9c9; --dark: #232224; --pad: 30px; }
+:root { --bg: #f2f2f2; --ink: #1b1b1b; --mute: #7a7a7a; --line: #c9c9c9; --dark: #232224; --acc: #c2672a; --pad: 30px; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
@@ -21,14 +21,16 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
 .demo { background: #111; color: #fff; font-size: 12px; text-align: center; padding: 8px 16px; }
 
 /* шапка */
-.header { position: absolute; left: 0; right: 0; z-index: 20; display: grid; grid-template-columns: 2fr 2fr 1fr 5fr 2fr; align-items: center; padding: 22px var(--pad); color: #fff; border-bottom: 1px solid rgba(255, 255, 255, .55); font-size: 13px; font-weight: 500; }
-.logo { font: 500 28px/1 Oswald, sans-serif; text-transform: uppercase; letter-spacing: .01em; display: flex; align-items: center; gap: 8px; }
-.logo svg { width: 30px; height: 30px; }
-.header nav { display: flex; gap: 26px; }
-.header a:hover { opacity: .7; }
-.header .contacts { text-align: right; }
-.burger { background: none; border: 0; padding: 6px; cursor: pointer; justify-self: start; }
-.burger span { display: block; width: 28px; height: 2px; background: #fff; margin: 5px 0; }
+.header { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 34px; padding: 14px var(--pad); background: rgba(242, 242, 242, .92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); font-size: 13px; font-weight: 500; }
+.logo { font: 500 26px/1 Oswald, sans-serif; text-transform: uppercase; letter-spacing: .01em; display: flex; align-items: center; gap: 10px; }
+.logo svg { width: 34px; height: 34px; }
+.header nav { display: flex; gap: 26px; margin-right: auto; }
+.header a:hover { color: var(--acc); }
+.header .phone { font: 500 20px/1 Oswald, sans-serif; white-space: nowrap; }
+.header .order { background: var(--ink); color: #fff; padding: 12px 18px; font: 500 16px/1 Oswald, sans-serif; text-transform: uppercase; white-space: nowrap; }
+.header .order:hover { background: var(--acc); color: #fff; }
+.burger { display: none; background: none; border: 0; padding: 6px; cursor: pointer; margin-left: auto; }
+.burger span { display: block; width: 28px; height: 2px; background: var(--ink); margin: 5px 0; }
 .menu { position: fixed; inset: 0; z-index: 50; background: var(--dark); color: #fff; padding: 28px var(--pad); display: none; overflow: auto; }
 .menu.open { display: block; }
 .menu-close { background: none; border: 0; color: #fff; font: 500 26px/1 Oswald, sans-serif; cursor: pointer; float: right; }
@@ -37,71 +39,79 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
 .menu-foot { margin-top: 48px; display: grid; gap: 6px; color: #cfcfcf; }
 .menu-foot a { color: #fff; font-size: 20px; }
 
-/* первый экран */
-.hero { position: relative; height: calc(100vh - 34px); min-height: 620px; max-height: 1000px; overflow: hidden; background: #000; color: #fff; }
-.hero-bg { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; }
-.hero-bg.on { opacity: 1; }
-.hero-bg img { width: 100%; height: 100%; object-fit: cover; animation: zoom 14s ease-in-out infinite alternate; }
-@keyframes zoom { from { transform: scale(1); } to { transform: scale(1.09); } }
-.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .55) 0, rgba(0, 0, 0, .12) 45%, rgba(0, 0, 0, .35) 100%); }
-.hero h1 { position: absolute; z-index: 5; left: var(--pad); top: 126px; max-width: 980px; font-size: clamp(38px, 4.9vw, 78px); line-height: 1.04; }
-.card { position: absolute; z-index: 6; right: var(--pad); bottom: 30px; width: min(680px, calc(100% - 2 * var(--pad))); background: var(--bg); color: var(--ink); display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 5px 5px 5px 20px; min-height: 186px; }
-.card-text { padding: 14px 0 12px; display: flex; flex-direction: column; }
-.card-top { display: flex; justify-content: space-between; align-items: baseline; }
-.card-top h3 { font-size: 26px; }
-.card-top span { font-size: 13px; font-weight: 500; }
-.card-text p { margin: 12px 0 0; font-size: 12.5px; line-height: 1.45; color: #555; flex: 1; }
-.card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+/* первый экран: дом собирается по прокрутке */
+.hero { position: relative; height: 420vh; }
+.hero-pin { position: sticky; top: 63px; height: calc(100vh - 63px); min-height: 560px; display: grid; grid-template-columns: 5fr 7fr; overflow: hidden; }
+.hero-text { padding: 5vh 0 56px var(--pad); display: flex; flex-direction: column; position: relative; z-index: 2; }
+.hero-eyebrow { font-size: 12px; text-transform: uppercase; color: var(--mute); display: flex; gap: 12px; align-items: center; }
+.hero-eyebrow::before { content: ""; width: 18px; height: 2px; background: var(--acc); }
+.hero h1 { font-size: clamp(40px, 5.2vw, 86px); line-height: 1.02; margin-top: 18px; }
+.hero h1 em { font-style: normal; color: var(--acc); }
+.hero-sub { margin: 20px 0 0; max-width: 440px; color: #555; font-size: 15px; }
+.hero-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.stages { list-style: none; margin: auto 0 0; padding: 0; border-top: 1px solid #555; max-width: 520px; }
+.stages li { display: grid; grid-template-columns: 54px 1fr; align-items: baseline; padding: 11px 0; border-bottom: 1px solid #555; color: #9a9a9a; transition: color .3s; }
+.stages b { font: 500 20px/1.1 Oswald, sans-serif; text-transform: uppercase; }
+.stages span { font: 500 20px/1.1 Oswald, sans-serif; }
+.stages p { grid-column: 2; margin: 0; font-size: 13px; line-height: 1.4; max-height: 0; overflow: hidden; opacity: 0; transition: max-height .4s ease, opacity .4s ease, margin .4s ease; }
+.stages li.on { color: var(--ink); }
+.stages li.on span { color: var(--acc); }
+.stages li.on p { max-height: 60px; opacity: 1; margin-top: 4px; color: #555; }
+.hero-stage { position: relative; }
+.hero-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+.hero.no3d { height: auto; }
+.hero.no3d .hero-pin { position: relative; top: 0; }
+.hero.no3d canvas { display: none; }
+.hero.no3d .hero-stage img { display: block; }
+.hero-hint { position: absolute; right: var(--pad); bottom: 56px; font-size: 12px; text-transform: uppercase; color: var(--mute); display: flex; align-items: center; gap: 10px; transition: opacity .4s; }
+.hero-hint::after { content: ""; width: 1px; height: 34px; background: var(--ink); animation: hint 1.6s ease-in-out infinite; transform-origin: top; }
+@keyframes hint { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+.hero-bar { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--acc); width: 0; }
 .more { font: 500 18px/1 Oswald, sans-serif; text-transform: uppercase; border: 0; background: none; cursor: pointer; padding: 0; color: var(--ink); display: inline-flex; align-items: center; gap: 12px; }
-.more i { width: 20px; height: 20px; background: var(--ink); color: #fff; display: grid; place-items: center; font: 600 12px/1 Inter, sans-serif; font-style: normal; }
+.more i { width: 20px; height: 20px; background: var(--acc); color: #fff; display: grid; place-items: center; font: 600 12px/1 Inter, sans-serif; font-style: normal; }
 .more:hover { opacity: .65; }
-.dots { display: flex; gap: 6px; }
-.dots button { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #999; background: none; padding: 0; cursor: pointer; }
-.dots button.on { background: var(--ink); border-color: var(--ink); box-shadow: inset 0 0 0 2px var(--bg); }
-.card-img { position: relative; overflow: hidden; }
-.card-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 /* общие блоки */
 .sec { padding: 130px var(--pad) 110px; }
 .head { display: grid; grid-template-columns: 2fr 10fr; gap: 20px; }
 .label { font-size: 12px; text-transform: uppercase; color: var(--mute); padding-top: 14px; display: flex; gap: 12px; align-items: flex-start; }
-.label::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--mute); margin-top: 5px; flex: none; }
+.label::before { content: ""; width: 18px; height: 2px; background: var(--acc); margin-top: 8px; flex: none; }
 .h2 { font-size: clamp(34px, 4.6vw, 72px); line-height: 1.06; }
-.h2 em { font-style: normal; color: var(--mute); }
+.h2 em { font-style: normal; color: var(--acc); }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin: 34px 0 0 calc(100% / 3); max-width: 900px; color: #666; font-size: 14px; }
 .two p { margin: 0; }
 .head + .two + .more, .after { margin: 56px 0 0 calc(100% / 3); }
-.about-imgs { display: grid; grid-template-columns: 3fr 1fr 8fr; margin-top: 100px; align-items: start; }
-.about-imgs img { width: 100%; object-fit: cover; }
-.about-imgs .lg { grid-column: 3; margin-top: 70px; aspect-ratio: 14 / 9; }
-.about-imgs .sm { aspect-ratio: 1; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 90px; border-top: 1px solid #555; }
+.stats div { padding: 22px 0 0; }
+.stats b { display: block; font: 500 clamp(40px, 4.6vw, 76px)/1 Oswald, sans-serif; text-transform: uppercase; }
+.stats b i { font-style: normal; color: var(--acc); }
+.stats span { display: block; margin-top: 8px; color: #666; font-size: 13px; max-width: 220px; }
+.wide { margin-top: 70px; width: 100%; aspect-ratio: 21 / 9; object-fit: cover; }
 
 /* тёмный блок с фактами */
-.facts { position: relative; color: #fff; padding: 150px var(--pad) 90px; overflow: hidden; background: #111; }
-.facts > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.38); }
-.facts > * { position: relative; }
-.facts h2 { font-size: clamp(38px, 5.6vw, 92px); line-height: 1.04; max-width: 1150px; }
-.facts-row { display: grid; grid-template-columns: 4fr 8fr; gap: 20px; margin-top: 150px; align-items: end; }
-.facts-row p { margin: 0; font-size: 13px; max-width: 250px; color: #ddd; }
+.facts { position: relative; color: #fff; padding: 110px var(--pad) 100px; background: var(--dark); display: grid; grid-template-columns: 5fr 7fr; gap: 40px; align-items: start; }
+.facts h2 { font-size: clamp(34px, 4.2vw, 68px); line-height: 1.06; }
+.facts h2 em { font-style: normal; color: #e08a4c; }
+.facts-left p { margin: 24px 0 0; font-size: 14px; max-width: 340px; color: #bdbdbd; }
 .facts ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(255, 255, 255, .8); }
-.facts li { display: grid; grid-template-columns: 3fr 8fr auto; gap: 16px; align-items: center; padding: 22px 0; border-bottom: 1px solid rgba(255, 255, 255, .8); font: 500 clamp(22px, 2.2vw, 32px)/1.05 Oswald, sans-serif; text-transform: uppercase; }
-.facts li::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
+.facts li { display: grid; grid-template-columns: 90px 1fr; gap: 16px; align-items: center; padding: 22px 0; border-bottom: 1px solid rgba(255, 255, 255, .8); font: 500 clamp(22px, 2.2vw, 32px)/1.05 Oswald, sans-serif; text-transform: uppercase; }
+.facts li span { color: #e08a4c; }
 
 /* направления */
-.dirs { display: grid; grid-template-columns: 4fr 8fr; gap: 20px; margin-top: 60px; align-items: start; }
-.tabs { display: grid; }
-.tabs button { display: flex; justify-content: space-between; align-items: center; text-align: left; border: 0; border-bottom: 1px solid #555; background: none; padding: 12px 0; font: 500 20px/1.1 Oswald, sans-serif; text-transform: uppercase; color: var(--ink); cursor: pointer; transition: background .25s, color .25s, padding .25s; }
-.tabs button::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); flex: none; margin-left: 12px; }
-.tabs button.on { background: #363437; color: #fff; padding: 14px 16px; border-color: #363437; }
-.tabs button.on::after { background: #fff; }
+.dirs { margin-top: 60px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.tabs button { border: 0; background: none; box-shadow: inset 0 0 0 1px #555; padding: 12px 18px; font: 500 18px/1.1 Oswald, sans-serif; text-transform: uppercase; color: var(--ink); cursor: pointer; transition: background .25s, color .25s; }
+.tabs button:hover { box-shadow: inset 0 0 0 1px var(--acc); color: var(--acc); }
+.tabs button.on { background: var(--ink); color: #fff; box-shadow: none; }
 .pane { display: none; }
-.pane.on { display: block; animation: fade .5s ease; }
+.pane.on { display: grid; grid-template-columns: 7fr 5fr; gap: 40px; align-items: end; animation: fade .5s ease; }
 @keyframes fade { from { opacity: 0; transform: translateY(10px); } }
 .pane img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-.pane-info { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 26px; }
+.pane-info { display: grid; gap: 22px; padding-bottom: 6px; }
 .pane-info h3 { font-size: clamp(28px, 3vw, 44px); line-height: 1; }
 .pane-info p { margin: 0 0 22px; color: #666; font-size: 14px; }
-.price { font: 500 22px/1 Oswald, sans-serif; color: var(--mute); margin-top: 12px; }
+.price { font: 500 26px/1 Oswald, sans-serif; color: var(--acc); margin-top: 12px; }
 
 /* объекты */
 .projects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 60px; }
@@ -110,12 +120,12 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
 .projects img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s ease; }
 .projects figure:hover img { transform: scale(1.05); }
 .projects figcaption { display: flex; gap: 14px; padding: 12px 0 18px; border-bottom: 1px solid #555; font: 500 22px/1.1 Oswald, sans-serif; text-transform: uppercase; }
-.projects figcaption span { color: var(--mute); }
+.projects figcaption span { color: var(--acc); }
 
 /* отзывы */
 .reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 60px; }
 .review { background: #fff; padding: 26px 24px; display: flex; flex-direction: column; min-height: 240px; }
-.review b { font: 400 13px/1 Inter, sans-serif; color: var(--mute); text-transform: uppercase; }
+.review b { font: 400 13px/1 Inter, sans-serif; color: var(--acc); text-transform: uppercase; }
 .review h3 { font-size: 26px; line-height: 1.02; margin: 10px 0 14px; }
 .review p { margin: 0; color: #555; font-size: 14px; flex: 1; }
 .review small { display: block; margin-top: 18px; font-size: 12px; color: var(--mute); }
@@ -124,7 +134,7 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
 .steps { list-style: none; margin: 60px 0 0 calc(100% / 3); padding: 0; border-top: 1px solid #555; }
 .steps li { display: grid; grid-template-columns: 1fr 4fr 6fr; gap: 16px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid #555; }
 .steps span, .steps h3 { font: 500 clamp(22px, 2.2vw, 30px)/1.05 Oswald, sans-serif; text-transform: uppercase; }
-.steps span { color: var(--mute); }
+.steps span { color: var(--acc); }
 .steps p { margin: 0; color: #666; font-size: 14px; }
 
 /* вопросы */
@@ -139,7 +149,7 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
 /* контакты */
 .cta { background: var(--dark); color: #fff; padding: 120px var(--pad) 70px; }
 .cta h2 { font-size: clamp(38px, 5.6vw, 92px); line-height: 1.04; max-width: 1100px; }
-.cta h2 em { font-style: normal; color: #8d8d8d; }
+.cta h2 em { font-style: normal; color: #e08a4c; }
 .cta-grid { display: grid; grid-template-columns: 4fr 4fr 4fr; gap: 20px 40px; margin-top: 90px; align-items: start; }
 .cta dl { margin: 0; display: grid; gap: 26px; }
 .cta dt { font-size: 12px; text-transform: uppercase; color: #9a9a9a; margin-bottom: 6px; }
@@ -156,7 +166,9 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
 .calc-sum { font: 500 clamp(30px, 3.4vw, 46px)/1 Oswald, sans-serif; }
 .calc-sum small { display: block; font: 400 12px/1.4 Inter, sans-serif; color: var(--mute); text-transform: none; margin-top: 8px; max-width: 330px; }
 .btn { display: inline-flex; align-items: center; gap: 12px; background: var(--ink); color: #fff; padding: 16px 22px; font: 500 20px/1 Oswald, sans-serif; text-transform: uppercase; }
-.btn:hover { background: #000; }
+.btn:hover { background: var(--acc); }
+.btn.ghost { background: none; color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: #fff; }
 .footer { background: var(--dark); color: #8d8d8d; border-top: 1px solid #4a4a4a; padding: 22px var(--pad) 28px; display: flex; flex-wrap: wrap; gap: 10px 30px; justify-content: space-between; font-size: 12px; }
 .footer a { color: #cfcfcf; }
 
@@ -165,37 +177,43 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
 
 @media (max-width: 1000px) {
   :root { --pad: 20px; }
-  .header { grid-template-columns: 1fr auto; }
-  .header nav, .header .order, .header .contacts { display: none; }
-  .burger { justify-self: end; }
+  .header nav, .header .order, .header .phone { display: none; }
+  .burger { display: block; }
+  .hero { height: 340vh; }
+  .hero-pin { top: 59px; height: calc(100vh - 59px); grid-template-columns: 1fr; grid-template-rows: 42% 1fr; }
+  .hero-stage { grid-row: 1; }
+  .hero-text { padding: 0 var(--pad) 18px; }
+  .hero h1 { margin-top: 8px; font-size: clamp(30px, 8vw, 54px); }
+  .hero-sub { display: none; }
+  .hero-btns { margin-top: 14px; }
+  .hero-btns .ghost { display: none; }
+  .hero-hint { display: none; }
+  .stages { margin-top: 14px; }
+  .stages li { padding: 7px 0; }
+  .stages b, .stages span { font-size: 17px; }
+  .stats { grid-template-columns: 1fr 1fr; margin-top: 50px; }
+  .wide { margin-top: 40px; aspect-ratio: 16 / 10; }
+  .facts { grid-template-columns: 1fr; }
+  .pane.on { grid-template-columns: 1fr; gap: 20px; }
   .head { grid-template-columns: 1fr; gap: 6px; }
   .label { padding-top: 0; margin-bottom: 10px; }
   .two { margin-left: 0; gap: 20px; }
   .head + .two + .more, .after, .steps, .faq { margin-left: 0; }
-  .about-imgs { grid-template-columns: 1fr 2fr; gap: 12px; margin-top: 56px; }
-  .about-imgs .lg { grid-column: 2; margin-top: 40px; }
   .sec { padding: 80px var(--pad) 70px; }
-  .facts { padding: 90px var(--pad) 60px; }
-  .facts-row { grid-template-columns: 1fr; margin-top: 60px; }
-  .dirs { grid-template-columns: 1fr; }
+  .facts { padding: 70px var(--pad) 60px; }
   .projects, .reviews { grid-template-columns: 1fr 1fr; gap: 12px; }
   .cta-grid { grid-template-columns: 1fr; margin-top: 50px; }
   .calc { grid-column: auto; }
 }
 @media (max-width: 640px) {
-  .hero h1 { top: 96px; }
-  .logo { font-size: 24px; }
-  .card { grid-template-columns: 1fr; padding: 5px; bottom: 16px; min-height: 0; }
-  .card-text { padding: 12px 12px 10px; }
-  .card-img { display: none; }
+  .logo { font-size: 22px; }
   .two, .pane-info, .calc-row { grid-template-columns: 1fr; gap: 16px; }
   .projects, .reviews { grid-template-columns: 1fr; }
   .steps li { grid-template-columns: auto 1fr; }
   .steps p { grid-column: 2; }
-  .facts li { grid-template-columns: auto 1fr auto; gap: 14px; }
+  .facts li { grid-template-columns: 56px 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-bg img { animation: none; }
   .rv { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }
 }
@@ -207,19 +225,20 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
 
 <header class="header">
   <a class="logo" href="#top" aria-label="Строй Дом — на главную">
-    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M2 14 16 5l14 9v3L16 8 2 17z" fill="#fff"/><path d="M5 18l11-7 11 7v9H5z" fill="#fff"/><path d="M13 27v-7h6v7" fill="#232224"/></svg>
+    <svg viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect width="34" height="34" fill="#1b1b1b"/><path d="M6 17 17 8l11 9" stroke="#c2672a" stroke-width="2.4"/><path d="M10 16v10M15 14v12M19 14v12M24 16v10M9 26h16" stroke="#fff" stroke-width="1.8"/></svg>
     Строй Дом
   </a>
-  <a class="order" href="#contacts">Рассчитать смету</a>
-  <button class="burger" aria-label="Открыть меню" data-menu-open><span></span><span></span><span></span></button>
   <nav aria-label="Основная навигация">
     <a href="#directions" data-dir="0">Каркасные дома</a>
     <a href="#directions" data-dir="1">Каменные дома</a>
     <a href="#directions" data-dir="2">Бытовки</a>
     <a href="#directions" data-dir="3">Ангары</a>
     <a href="#projects">Объекты</a>
+    <a href="#reviews">Отзывы</a>
   </nav>
-  <a class="contacts" href="#contacts">Контакты</a>
+  <a class="phone" href="tel:+79887870656">+7 (988) 787-06-56</a>
+  <a class="order" href="#contacts">Рассчитать смету</a>
+  <button class="burger" aria-label="Открыть меню" data-menu-open><span></span><span></span><span></span></button>
 </header>
 
 <div class="menu" id="menu">
@@ -242,26 +261,29 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
 </div>
 
 <main id="top">
-<section class="hero">
-  <div class="hero-bg on"><img src="assets/stroydom/hero-1.jpg" alt="Дом с панорамным остеклением и террасой — объект компании" width="1600" height="1000"></div>
-  <div class="hero-bg"><img src="assets/stroydom/hero-2.jpg" alt="Дом с крыльцом и тёмной обшивкой — объект компании" width="1600" height="1000" loading="lazy"></div>
-  <div class="hero-bg"><img src="assets/stroydom/hero-3.jpg" alt="Бытовка с тёмной обшивкой — объект компании" width="1600" height="1000" loading="lazy"></div>
-  <div class="hero-bg"><img src="assets/stroydom/hero-4.jpg" alt="Длинное одноэтажное здание с тёмной обшивкой — объект компании" width="1600" height="1000" loading="lazy"></div>
-
-  <h1>Строй Дом — каркасные дома в&nbsp;Махачкале и&nbsp;по&nbsp;всему Дагестану</h1>
-
-  <div class="card" aria-live="polite">
-    <div class="card-text">
-      <div class="card-top"><h3 data-card-title>Каркасные дома</h3><span><b data-card-n>1</b> / 4</span></div>
-      <p data-card-text>Три комплектации: тёплый контур, предчистовая отделка или под ключ. От 25 000 ₽ за м².</p>
-      <div class="card-bottom">
-        <a class="more" href="#directions" data-card-more>Узнать больше</a>
-        <div class="dots" data-dots>
-          <button class="on" aria-label="Каркасные дома"></button><button aria-label="Каменные дома"></button><button aria-label="Бытовки"></button><button aria-label="Ангары и склады"></button>
-        </div>
+<section class="hero" data-hero>
+  <div class="hero-pin">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Махачкала · строим по всему Дагестану</div>
+      <h1>Каркасный дом <em>от&nbsp;фундамента до&nbsp;крыши</em></h1>
+      <p class="hero-sub">Строй Дом строит каркасные и&nbsp;каменные дома, бытовки и&nbsp;ангары. Листайте вниз: дом соберётся по&nbsp;этапам, как на&nbsp;стройке.</p>
+      <div class="hero-btns">
+        <a class="btn" href="#contacts">Рассчитать смету ↗</a>
+        <a class="btn ghost" href="#projects">Смотреть объекты</a>
       </div>
+      <ol class="stages" data-stages>
+        <li class="on"><span>(01)</span><b>Фундамент</b><p>Свайный, ленточный или плитный: подбираем под грунт и&nbsp;нагрузку.</p></li>
+        <li><span>(02)</span><b>Каркас</b><p>Деревянный или комбинированный каркас: стойки, обвязки, стропила.</p></li>
+        <li><span>(03)</span><b>Тёплый контур</b><p>Утепление, окна, двери и&nbsp;внешняя отделка.</p></li>
+        <li><span>(04)</span><b>Дом под ключ</b><p>Кровля, отделка и&nbsp;коммуникации. 2–4&nbsp;месяца, от&nbsp;25&nbsp;000&nbsp;₽ за&nbsp;м².</p></li>
+      </ol>
     </div>
-    <div class="card-img"><img data-card-img src="assets/stroydom/dir-1.jpg" alt="" width="1200" height="900"></div>
+    <div class="hero-stage">
+      <canvas data-house aria-label="3D-модель каркасного дома, которая собирается при прокрутке"></canvas>
+      <img src="assets/stroydom/hero-1.jpg" alt="Дом с панорамным остеклением и террасой — объект компании" width="1600" height="1000">
+    </div>
+    <div class="hero-hint" data-hint>Листайте вниз</div>
+    <div class="hero-bar" data-bar></div>
   </div>
 </section>
 
@@ -275,25 +297,27 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
     <p>Берём все этапы: проект, фундамент, каркас, кровлю, инженерные сети и&nbsp;отделку. На&nbsp;объект выезжает наша бригада, материалы привозим сами. Работаем по&nbsp;безналичному расчёту и&nbsp;с&nbsp;госзаказчиками.</p>
   </div>
   <a class="more rv" href="#contacts">Рассчитать смету <i>↳</i></a>
-  <div class="about-imgs rv">
-    <img class="sm" src="assets/stroydom/about-sm.jpg" alt="Фасад из металла и дерева — объект компании" width="700" height="700" loading="lazy">
-    <img class="lg" src="assets/stroydom/about-lg.jpg" alt="Модульный дом с крыльцом — объект компании" width="1400" height="900" loading="lazy">
+  <div class="stats rv">
+    <div><b>от 25 <i>тыс.</i></b><span>рублей за м² каркасного дома</span></div>
+    <div><b>2–4 <i>мес.</i></b><span>на каркасный дом под ключ</span></div>
+    <div><b>10+ <i>лет</i></b><span>опыта в сварке и стройке</span></div>
+    <div><b>4</b><span>направления: дома, бытовки, ангары, склады</span></div>
   </div>
+  <img class="wide rv" src="assets/stroydom/about-lg.jpg" alt="Модульный дом с крыльцом — объект компании" width="1400" height="900" loading="lazy">
 </section>
 
 <section class="facts">
-  <img src="assets/stroydom/dark.jpg" alt="" width="1600" height="1000" loading="lazy">
-  <h2 class="rv">Строим для семей, бизнеса и&nbsp;госзаказчиков</h2>
-  <div class="facts-row">
-    <p class="rv">Смету считаем бесплатно после обсуждения проекта. В&nbsp;договоре записываем сроки и&nbsp;стоимость.</p>
-    <ol class="rv">
-      <li><span>(01)</span>Каркасный дом под ключ — 2–4 месяца</li>
-      <li><span>(02)</span>Каркасный дом — от 25 000 ₽ за м²</li>
-      <li><span>(03)</span>Рассрочка без банка</li>
-      <li><span>(04)</span>Своя бригада и доставка материалов</li>
-      <li><span>(05)</span>Более 10 лет опыта</li>
-    </ol>
+  <div class="facts-left rv">
+    <h2>Строим для семей, <em>бизнеса и&nbsp;госзаказчиков</em></h2>
+    <p>Смету считаем бесплатно после обсуждения проекта. В&nbsp;договоре записываем сроки и&nbsp;стоимость.</p>
   </div>
+  <ol class="rv">
+    <li><span>(01)</span>Каркасный дом под ключ — 2–4 месяца</li>
+    <li><span>(02)</span>Каркасный дом — от 25 000 ₽ за м²</li>
+    <li><span>(03)</span>Рассрочка без банка</li>
+    <li><span>(04)</span>Своя бригада и доставка материалов</li>
+    <li><span>(05)</span>Более 10 лет опыта</li>
+  </ol>
 </section>
 
 <section class="sec" id="directions">
@@ -441,6 +465,8 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
   <a href="https://ak-stroydom.ru" target="_blank" rel="noopener">ak-stroydom.ru</a>
 </footer>
 
+<script src="assets/vendor/three.min.js"></script>
+<script src="assets/house3d.js"></script>
 <script>
 (function () {
   const $ = (s, r) => (r || document).querySelector(s);
@@ -461,28 +487,29 @@ h1, h2, h3, .cond { font-family: Oswald, "Arial Narrow", Impact, sans-serif; fon
   tabs.forEach((t, i) => t.addEventListener('click', () => pickDir(i)));
   $$('[data-dir]').forEach(a => a.addEventListener('click', () => pickDir(+a.dataset.dir)));
 
-  // первый экран: фон и карточка меняются вместе
-  const slides = [
-    ['Каркасные дома', 'Три комплектации: тёплый контур, предчистовая отделка или под ключ. От 25 000 ₽ за м².', 'dir-1'],
-    ['Каменные дома', 'Дома из кирпича и газобетона. Проект, фундамент, стены, кровля и отделка. От 30 000 ₽ за м².', 'dir-2'],
-    ['Бытовки', 'Бытовки, посты охраны и блок-контейнеры. Привозим готовыми и ставим на участок. От 15 000 ₽ за м².', 'dir-3'],
-    ['Ангары и склады', 'Арочные и рамные ангары под технику, склад или цех. От 7 000 ₽ за м².', 'dir-4']
-  ];
-  const bgs = $$('.hero-bg'), dots = $$('[data-dots] button');
-  let cur = 0, timer;
-  function show(i) {
-    cur = i;
-    bgs.forEach((b, k) => b.classList.toggle('on', k === i));
-    dots.forEach((d, k) => d.classList.toggle('on', k === i));
-    $('[data-card-title]').textContent = slides[i][0];
-    $('[data-card-text]').textContent = slides[i][1];
-    $('[data-card-n]').textContent = i + 1;
-    $('[data-card-img]').src = 'assets/stroydom/' + slides[i][2] + '.jpg';
+  // первый экран: 3D-дом собирается по прокрутке
+  const hero = $('[data-hero]'), stages = $$('[data-stages] li'), bar = $('[data-bar]'), hint = $('[data-hint]');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const h3d = !still && window.THREE && window.House3D ? House3D.init($('[data-house]')) : null;
+  if (!h3d) {
+    hero.classList.add('no3d');
+    stages.forEach(li => li.classList.add('on'));
+  } else {
+    const cuts = [0.06, 0.48, 0.74];
+    const forced = +new URLSearchParams(location.search).get('p');
+    function onScroll() {
+      const r = hero.getBoundingClientRect(), span = r.height - window.innerHeight;
+      const p = forced || Math.max(0, Math.min(1, -r.top / (span || 1)));
+      forced ? h3d.jump(p) : h3d.set(p);
+      const k = cuts.filter(c => p >= c).length;
+      stages.forEach((li, i) => li.classList.toggle('on', i === k));
+      bar.style.width = (p * 100) + '%';
+      hint.style.opacity = p > 0.03 ? 0 : 1;
+    }
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    onScroll();
   }
-  function auto() { clearInterval(timer); timer = setInterval(() => show((cur + 1) % slides.length), 6000); }
-  dots.forEach((d, i) => d.addEventListener('click', () => { show(i); auto(); }));
-  $('[data-card-more]').addEventListener('click', () => pickDir(cur));
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) auto();
 
   // калькулятор
   const area = $('#c-area'), type = $('#c-type'), sum = $('[data-sum]'), wa = $('[data-wa]');
